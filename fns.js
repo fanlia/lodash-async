@@ -1,15 +1,18 @@
 import { as_iterator } from './iterator.js'
 
-export const forEach = async (array_like, fn) => {
+export const identity = async (item) => item
+
+export const is_true = async (item) => !!item
+
+export const forEach = async (array_like, fn = identity) => {
   const array = await as_iterator(array_like)
   let i = 0
   for await (const item of array) {
     await fn(item, i)
     i++
   }
+  return i
 }
-
-export const identity = async (item) => item
 
 export const map = async (array, fn = identity) => {
   let data = []
@@ -20,7 +23,19 @@ export const map = async (array, fn = identity) => {
   return data
 }
 
-export const filter = async (array, fn) => {
+export const flatMap = async (array, fn = identity) => {
+  let data = []
+  await forEach(array, async (...args) => {
+    let new_items = await fn(...args)
+    if (!Array.isArray(new_items)) {
+      new_items = [new_items]
+    }
+    data.push(...new_items)
+  })
+  return data
+}
+
+export const filter = async (array, fn = is_true) => {
   let data = []
   await forEach(array, async (item, ...args) => {
     const ok = await fn(item, ...args)
@@ -53,10 +68,15 @@ export const uniq = async (array, fn = identity) => {
   return data
 }
 
-export const is_true = async (item) => !!item
+export const compact = filter
 
-export const compact = async (array, fn = is_true) => {
-  return filter(array, fn)
+export const keyBy = async (array, fn = identity) => {
+  let data = {}
+  await forEach(array, async (item, ...args) => {
+    const new_item = await fn(item, ...args)
+    data[new_item] = item
+  })
+  return data
 }
 
 export const groupBy = async (array, fn = identity) => {
@@ -108,7 +128,7 @@ export const fromPairs = (key_value_list = []) => {
   return key_value_list.reduce((m, d) => ({ ...m, [d[0]]: d[1] }), {})
 }
 
-export const mapKeys = async (object, fn) => {
+export const mapKeys = async (object, fn = identity) => {
   const array = toPairs(object)
   const result = await map(array, async ([key, value], i) => {
     const new_key = await fn(value, key, i)
@@ -117,7 +137,7 @@ export const mapKeys = async (object, fn) => {
   return fromPairs(result)
 }
 
-export const mapValues = async (object, fn) => {
+export const mapValues = async (object, fn = identity) => {
   const array = toPairs(object)
   const result = await map(array, async ([key, value], i) => {
     const new_value = await fn(value, key, i)

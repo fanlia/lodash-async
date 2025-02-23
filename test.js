@@ -3,7 +3,9 @@ import assert from 'node:assert/strict'
 
 import {
   Observable,
+  forEach,
   map,
+  flatMap,
   filter,
   reduce,
   mapKeys,
@@ -11,26 +13,34 @@ import {
   chunk,
   uniq,
   compact,
+  keyBy,
   groupBy,
   countBy,
   chain,
 } from './index.js'
 
-test('from array', async (t) => {
+test('forEach', async (t) => {
+  const value = [2, 3, 4]
+  const expect = value.length
+  const actual = await forEach(value)
+  assert.deepEqual(expect, actual)
+})
+
+test('map array', async (t) => {
   const value = [2, 3, 4]
   const expect = [2, 3, 4]
   const actual = await map(value)
   assert.deepEqual(expect, actual)
 })
 
-test('from promise', async (t) => {
+test('map promise', async (t) => {
   const value = async () => [2, 3, 4]
   const expect = [2, 3, 4]
   const actual = await map(value)
   assert.deepEqual(expect, actual)
 })
 
-test('from iterator', async (t) => {
+test('map iterator', async (t) => {
   const value = function* () {
     yield 2
     yield 3
@@ -41,7 +51,7 @@ test('from iterator', async (t) => {
   assert.deepEqual(expect, actual)
 })
 
-test('from observable', async (t) => {
+test('map observable', async (t) => {
   const value = new Observable((subscriber) => {
     subscriber.next(2)
     subscriber.next(3)
@@ -52,6 +62,13 @@ test('from observable', async (t) => {
   })
   const expect = [2, 3, 4]
   const actual = await map(value)
+  assert.deepEqual(expect, actual)
+})
+
+test('flatMap', async (t) => {
+  const value = [2, 3, 4]
+  const expect = [2, 2, 3, 3, 4, 4]
+  const actual = await flatMap(value, async (d) => [d, d])
   assert.deepEqual(expect, actual)
 })
 
@@ -115,6 +132,13 @@ test('groupBy', async (t) => {
   const value = [1, 2, 3, 2, 4, 1]
   const expect = { 1: [1, 1], 2: [2, 2], 3: [3], 4: [4] }
   const actual = await groupBy(value)
+  assert.deepEqual(expect, actual)
+})
+
+test('keyBy', async (t) => {
+  const value = [1, 2, 3, 2, 4, 1]
+  const expect = { 1: 1, 2: 2, 3: 3, 4: 4 }
+  const actual = await keyBy(value)
   assert.deepEqual(expect, actual)
 })
 
