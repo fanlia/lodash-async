@@ -27,10 +27,9 @@ export const flatMap = async (array, fn = identity) => {
   let data = []
   await forEach(array, async (...args) => {
     let new_items = await fn(...args)
-    if (!Array.isArray(new_items)) {
-      new_items = [new_items]
-    }
-    data.push(...new_items)
+    await forEach(new_items, (new_item) => {
+      data.push(new_item)
+    })
   })
   return data
 }
