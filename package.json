@@ -1,0 +1,12 @@
+{
+  "name": "lodash-async",
+  "version": "0.1.0",
+  "description": "lodash of async style",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
