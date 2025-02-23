@@ -31,20 +31,18 @@ test('chain', async (t) => {
 npm test
 ```
 
-✔ forEach (1.13798ms)
-✔ map array (0.356658ms)
-✔ map promise (0.22218ms)
-✔ map iterator (0.181525ms)
-✔ map observable (101.959613ms)
-✔ flatMap (0.695804ms)
-✔ filter (0.305824ms)
-✔ reduce (0.335008ms)
-✔ mapKeys (0.393547ms)
-✔ mapValues (0.350497ms)
-✔ chunk (0.260771ms)
-✔ compact (0.270779ms)
-✔ uniq (0.864645ms)
-✔ countBy (0.377637ms)
-✔ groupBy (0.341891ms)
-✔ keyBy (0.277892ms)
-✔ chain (0.299232ms)
+- ✔ forEach
+- ✔ map array
+- ✔ map promise
+- ✔ flatMap
+- ✔ filter
+- ✔ reduce
+- ✔ mapKeys
+- ✔ mapValues
+- ✔ chunk
+- ✔ compact
+- ✔ uniq
+- ✔ countBy
+- ✔ groupBy
+- ✔ keyBy
+- ✔ chain
