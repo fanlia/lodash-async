@@ -16,6 +16,8 @@ import assert from 'node:assert/strict'
 
 import {
   Observable,
+  interval,
+  take,
   forEach,
   map,
   flatMap,
@@ -74,6 +76,13 @@ test('map observable', async (t) => {
     }, 100)
   })
   const expect = [2, 3, 4]
+  const actual = await map(value)
+  assert.deepEqual(expect, actual)
+})
+
+test('map observable with pipe', async (t) => {
+  const value = interval(100).pipe(take(4))
+  const expect = [0, 1, 2, 3]
   const actual = await map(value)
   assert.deepEqual(expect, actual)
 })
