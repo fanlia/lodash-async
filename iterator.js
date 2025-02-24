@@ -27,10 +27,6 @@ export async function* as_iterator(array) {
     for await (const item of await data) {
       yield item
     }
-  } else if (typeof array === 'object') {
-    for (const key in array) {
-      yield array[key]
-    }
   } else {
     yield array
   }

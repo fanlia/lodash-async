@@ -50,6 +50,48 @@ export function interval(interval_time) {
   })
 }
 
+export const fromFetch = (url, options) =>
+  new Observable((subscriber) => {
+    const controller = new AbortController()
+    const { signal } = controller
+
+    fetch(url, {
+      ...options,
+      signal,
+    })
+      .then((res) => {
+        const reader = res.body.getReader()
+        function pump() {
+          if (controller.aborted) {
+            return
+          }
+          let utf8decoder = new TextDecoder()
+          reader
+            .read()
+            .then(({ done, value }) => {
+              if (done) {
+                subscriber.complete()
+                return
+              }
+              const decoded = utf8decoder.decode(value)
+              subscriber.next(decoded)
+              return pump()
+            })
+            .catch((err) => {
+              subscriber.error(err)
+            })
+        }
+        pump()
+      })
+      .catch((err) => {
+        subscriber.error(err)
+      })
+
+    return () => {
+      controller.abort()
+    }
+  })
+
 function normalize_state(state) {
   if (typeof state === 'function') {
     return {
