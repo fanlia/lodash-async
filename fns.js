@@ -1,8 +1,5 @@
 import { as_iterator } from './iterator.js'
-
-export const identity = async (item) => item
-
-export const is_true = async (item) => !!item
+import { identity, is_true } from './util.js'
 
 export const forEach = async (array_like, fn = identity) => {
   const array = await as_iterator(array_like)
