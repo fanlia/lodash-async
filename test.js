@@ -88,6 +88,16 @@ test('map observable with operate_map', async (t) => {
   assert.deepEqual(expect, actual)
 })
 
+test('map observable with operate_map can flattern', async (t) => {
+  const value = interval(100).pipe(
+    operate_map((d) => [d, d]),
+    operate_take(4),
+  )
+  const expect = [0, 0, 1, 1]
+  const actual = await map(value)
+  assert.deepEqual(expect, actual)
+})
+
 test('map observable with operate_filter', async (t) => {
   const value = interval(100).pipe(
     operate_filter((d) => d % 2 === 0),

@@ -1,3 +1,4 @@
+import { as_iterator } from './iterator.js'
 import { identity, nope } from './util.js'
 
 export class Observable {
@@ -87,9 +88,11 @@ export function operate(state) {
         async next(value) {
           if (!(await state.done())) {
             try {
-              const new_value = await state.update(value)
-              if (new_value !== undefined) {
-                await subscriber.next(new_value)
+              const array = await state.update(value)
+              for await (const new_value of as_iterator(array)) {
+                if (new_value !== undefined) {
+                  await subscriber.next(new_value)
+                }
               }
             } catch (err) {
               unsubscribe()
