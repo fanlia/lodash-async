@@ -246,6 +246,23 @@ test('chain', async (t) => {
 })
 ```
 
+```javascript
+import { fromEvent, fromFetch, log_subscriber } from 'lodash-async'
+
+fromEvent(document, 'click').subscribe(log_subscriber)
+
+fromFetch('http://localhost:11434/api/generate', {
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+  },
+  body: JSON.stringify({
+    model: 'qwen2.5:0.5b',
+    prompt: 'hello',
+  }),
+}).subscribe(log_subscriber)
+```
+
 ## test
 
 ```sh
