@@ -116,6 +116,10 @@ export const chunk = async (array, size = 1) => {
   return data
 }
 
+export const get = async (object = {}, fn = identity) => {
+  return fn(object)
+}
+
 export const toPairs = (object = {}) => {
   return Object.keys(object).map((key) => [key, object[key]])
 }

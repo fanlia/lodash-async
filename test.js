@@ -9,6 +9,7 @@ import {
   operate_filter,
   operate_reduce,
   operate,
+  get,
   forEach,
   map,
   flatMap,
@@ -24,6 +25,13 @@ import {
   countBy,
   chain,
 } from './index.js'
+
+test('get', async (t) => {
+  const value = [2, 3, 4]
+  const expect = value.length
+  const actual = await get(value, (d) => d.length)
+  assert.deepEqual(expect, actual)
+})
 
 test('forEach', async (t) => {
   const value = [2, 3, 4]
