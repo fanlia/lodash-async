@@ -7,7 +7,19 @@
   "scripts": {
     "test": "node --test test.js"
   },
-  "keywords": [],
+  "keywords": [
+    "lodash",
+    "async",
+    "Observable"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fanlia/lodash-async.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fanlia/lodash-async/issues"
+  },
+  "homepage": "https://github.com/fanlia/lodash-async#readme",
   "author": "",
   "license": "ISC"
 }
