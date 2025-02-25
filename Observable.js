@@ -1,4 +1,3 @@
-import { as_iterator } from './iterator.js'
 import { identity, nope, delay } from './util.js'
 
 export class Observable {
