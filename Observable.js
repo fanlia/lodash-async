@@ -1,5 +1,5 @@
 import { as_iterator } from './iterator.js'
-import { identity, nope } from './util.js'
+import { identity, nope, delay } from './util.js'
 
 export class Observable {
   constructor(subscriber) {
@@ -12,6 +12,34 @@ export class Observable {
 
   subscribe(observer) {
     return this.subscriber(observer) || nope
+  }
+}
+
+export async function* observable_as_iterator(observable) {
+  let data = []
+  let error = null
+  let running = true
+  observable.subscribe({
+    next(value) {
+      data.push(value)
+    },
+    error(err) {
+      error = err
+      running = false
+    },
+    complete() {
+      running = false
+    },
+  })
+  while (running) {
+    await delay(0)
+    if (data.length === 0) {
+      continue
+    }
+    yield await data.shift()
+  }
+  if (error) {
+    throw error
   }
 }
 
@@ -130,11 +158,9 @@ export function operate(state) {
         async next(value) {
           if (!(await state.done())) {
             try {
-              const array = await state.update(value)
-              for await (const new_value of as_iterator(array)) {
-                if (new_value !== undefined) {
-                  await subscriber.next(new_value)
-                }
+              const new_value = await state.update(value)
+              if (new_value !== undefined) {
+                await subscriber.next(new_value)
               }
             } catch (err) {
               unsubscribe()

@@ -1,4 +1,5 @@
-import { Observable } from './Observable.js'
+import { Observable, observable_as_iterator } from './Observable.js'
+import { delay } from './util.js'
 
 export async function* as_iterator(array) {
   if (Array.isArray(array)) {
@@ -10,24 +11,8 @@ export async function* as_iterator(array) {
       yield item
     }
   } else if (array instanceof Observable) {
-    const data = new Promise((resovle, reject) => {
-      let data = []
-      array.subscribe({
-        next(value) {
-          data.push(value)
-        },
-        error(err) {
-          reject(err)
-        },
-        complete() {
-          resovle(data)
-        },
-      })
-    })
-    for await (const item of await data) {
-      yield item
-    }
+    yield* observable_as_iterator(array)
   } else {
-    yield array
+    yield await array
   }
 }
