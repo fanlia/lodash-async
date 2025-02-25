@@ -12,7 +12,6 @@ import {
   get,
   forEach,
   map,
-  flatMap,
   filter,
   reduce,
   mapKeys,
@@ -132,13 +131,6 @@ test('map observable with custom operate', async (t) => {
   const value = interval(100).pipe(operate_custom_take(4))
   const expect = [0, 1, 2, 3]
   const actual = await map(value)
-  assert.deepEqual(expect, actual)
-})
-
-test('flatMap', async (t) => {
-  const value = [2, 3, 4]
-  const expect = [2, 2, 3, 3, 4, 4]
-  const actual = await flatMap(value, async (d) => [d, d])
   assert.deepEqual(expect, actual)
 })
 

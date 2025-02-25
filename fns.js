@@ -20,17 +20,6 @@ export const map = async (array, fn = identity) => {
   return data
 }
 
-export const flatMap = async (array, fn = identity) => {
-  let data = []
-  await forEach(array, async (...args) => {
-    let new_items = await fn(...args)
-    await forEach(new_items, (new_item) => {
-      data.push(new_item)
-    })
-  })
-  return data
-}
-
 export const filter = async (array, fn = is_true) => {
   let data = []
   await forEach(array, async (item, ...args) => {
