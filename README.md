@@ -156,13 +156,6 @@ test('map observable with custom operate', async (t) => {
   assert.deepEqual(expect, actual)
 })
 
-test('flatMap', async (t) => {
-  const value = [2, 3, 4]
-  const expect = [2, 2, 3, 3, 4, 4]
-  const actual = await flatMap(value, async (d) => [d, d])
-  assert.deepEqual(expect, actual)
-})
-
 test('filter', async (t) => {
   const value = [2, 3, 4]
   const expect = [3, 4]
