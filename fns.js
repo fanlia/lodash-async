@@ -109,28 +109,20 @@ export const get = async (object = {}, fn = identity) => {
   return fn(object)
 }
 
-export const toPairs = (object = {}) => {
-  return Object.keys(object).map((key) => [key, object[key]])
-}
-
-export const fromPairs = (key_value_list = []) => {
-  return key_value_list.reduce((m, d) => ({ ...m, [d[0]]: d[1] }), {})
-}
-
 export const mapKeys = async (object, fn = identity) => {
-  const array = toPairs(object)
+  const array = Object.entries(object)
   const result = await map(array, async ([key, value], i) => {
     const new_key = await fn(value, key, i)
     return [new_key, value]
   })
-  return fromPairs(result)
+  return Object.fromEntries(result)
 }
 
 export const mapValues = async (object, fn = identity) => {
-  const array = toPairs(object)
+  const array = Object.entries(object)
   const result = await map(array, async ([key, value], i) => {
     const new_value = await fn(value, key, i)
     return [key, new_value]
   })
-  return fromPairs(result)
+  return Object.fromEntries(result)
 }
