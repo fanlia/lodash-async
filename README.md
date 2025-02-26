@@ -31,7 +31,6 @@ import {
   mapValues,
   chunk,
   uniq,
-  compact,
   keyBy,
   groupBy,
   countBy,
@@ -196,13 +195,6 @@ test('chunk', async (t) => {
   const value = [2, 3, 4]
   const expect = [[2, 3], [4]]
   const actual = await chunk(value, 2)
-  assert.deepEqual(expect, actual)
-})
-
-test('compact', async (t) => {
-  const value = [2, false, 3, '', 4]
-  const expect = [2, 3, 4]
-  const actual = await compact(value)
   assert.deepEqual(expect, actual)
 })
 

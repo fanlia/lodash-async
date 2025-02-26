@@ -1,5 +1,5 @@
 import { as_iterator } from './iterator.js'
-import { identity, is_true } from './util.js'
+import { identity } from './util.js'
 
 export const forEach = async (array_like, fn = identity) => {
   const array = await as_iterator(array_like)
@@ -20,7 +20,7 @@ export const map = async (array, fn = identity) => {
   return data
 }
 
-export const filter = async (array, fn = is_true) => {
+export const filter = async (array, fn) => {
   let data = []
   await forEach(array, async (item, ...args) => {
     const ok = await fn(item, ...args)
@@ -38,22 +38,6 @@ export const reduce = async (array, fn, memo) => {
   })
   return data
 }
-
-export const uniq = async (array, fn = identity) => {
-  let data = []
-  let uniq_map = {}
-  await forEach(array, async (item, ...args) => {
-    const new_item = await fn(item, ...args)
-    if (uniq_map[new_item]) {
-      return
-    }
-    data.push(item)
-    uniq_map[new_item] = true
-  })
-  return data
-}
-
-export const compact = filter
 
 export const keyBy = async (array, fn = identity) => {
   let data = {}
@@ -105,8 +89,22 @@ export const chunk = async (array, size = 1) => {
   return data
 }
 
-export const get = async (object = {}, fn = identity) => {
-  return fn(object)
+export const uniq = async (array, fn = identity) => {
+  let data = []
+  let uniq_map = {}
+  await forEach(array, async (item, ...args) => {
+    const new_item = await fn(item, ...args)
+    if (uniq_map[new_item]) {
+      return
+    }
+    data.push(item)
+    uniq_map[new_item] = true
+  })
+  return data
+}
+
+export const get = async (data, fn = identity) => {
+  return fn(data)
 }
 
 export const mapKeys = async (object, fn = identity) => {
