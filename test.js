@@ -200,7 +200,7 @@ test('chain', async (t) => {
   const value = [2, 3, 4]
   const expect = [[2, 3], [4]]
   const actual = await chain([1, 2, 3])
-    .map((d) => d + 1)
+    .map(async (d) => d + 1)
     .chunk(2)
     .value()
   assert.deepEqual(expect, actual)
