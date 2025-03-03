@@ -77,17 +77,20 @@ export function interval(interval_time) {
   })
 }
 
-export const fromFetch = (url, options) =>
+export const fromFetch = (url, options = {}) =>
   new Observable((subscriber) => {
     const controller = new AbortController()
     const { signal } = controller
+    const { fetcher = fetch, ...fetch_options } = options
 
-    fetch(url, {
-      ...options,
+    fetcher(url, {
+      ...fetch_options,
       signal,
     })
       .then((res) => {
+        const content_type = res.headers.get('content-type')
         const reader = res.body.getReader()
+        let data = ''
         function pump() {
           if (controller.aborted) {
             return
@@ -101,7 +104,28 @@ export const fromFetch = (url, options) =>
                 return
               }
               const decoded = utf8decoder.decode(value)
-              subscriber.next(decoded)
+
+              if (content_type?.startsWith('text/event-stream')) {
+                data += decoded
+
+                let continueProcessing = true
+                while (continueProcessing) {
+                  const newlineIndex = data.indexOf('\n')
+                  if (newlineIndex === -1) {
+                    continueProcessing = false
+                    break
+                  }
+                  const line = data.slice(0, newlineIndex)
+                  data = data.slice(newlineIndex + 1)
+                  if (line.startsWith('data:')) {
+                    const value = line.slice('data:'.length).trim()
+                    subscriber.next(value)
+                  }
+                }
+              } else {
+                subscriber.next(decoded)
+              }
+
               return pump()
             })
             .catch((err) => {
